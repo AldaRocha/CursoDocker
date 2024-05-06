@@ -1,0 +1,777 @@
+¿Que es Docker?
+° Docker es una plataforma para poder construir, ejecutar y desplegar aplicaciones, Si tu aplicacion funciona en maquina local tambien lo hara en produccion.
+
+¿No funciona en produccion?
+° Falta uno o más archivos
+° Configuraciones distintas
+° Hay discordancia del software (En la local esta Python 3.11 y en produccion 3.6)
+
+
+|-------------------------------|
+|           Paquete 1           |
+|-------------------------------|
+|-Python 3.6                    |       -----> Nube -----> Laptop que tenga instalado Docker puede descargar el proyecto con una linea de comando.
+|-MySQL 8.0                     |
+|-App                           |
+|-------------------------------|
+
+Con el comando:
+*   docker-compose up   *
+Y otros desarrolladores ya podran trabajar en la app sin necesidad de descargar Python, MySQL, el codigo de la aplicacion, configurar las variables de entorno, etc.
+
+Se pueden tener varias versiones en el mismo docker
+|-------------------------------|   |-------------------------------|
+|           Paquete 1           |   |           Paquete 2           |
+|-------------------------------|   |-------------------------------|
+|-Python 3.6                    |   |-Python 3.11                   |
+|-MySQL 8.0                     |   |-MySQL 5.5                     |
+|-App                           |   |-App2                          |
+|-------------------------------|   |-------------------------------|
+Para eliminarlo solo se elimina el paquete y esto no afecta el otro paquete
+
+Los terminos correctos son:
+° Imagen
+° Contenedor
+
+¿Que es un Contenedor?
+° Un contenedor es un ambiente aislado para poder ejecutar aplicaciones.
+
+En cambio, una maquina virtual es una abstracción de hardware físico, donde acá nosotros tenemos un computador.
+Dentro de este nosotros vamos a tenero otro computador el cual se van a virtualizar la tarjeta grafica, el procesador, la memoria ram y asi sucesivamente con
+todo el hardware físico de la maquina. Y dentro de esto podemos instalar otro sistema operativo como podria ser nuevamente windows o alguna version de linux.
+La gracia de esto es que podemos tener múltiples máquinas virtuales dentro de la misma maquina y asi podemos jugar con distintos sistemas operativo, todos al 
+mismo tiempo.
+
+Para que nosotros podamos instalar distintos sistemas operativos dentro de nuestra maquina, vamos a necesitar un Hypervisor. Un Hypervisor es una aplicacion
+que se instala y por supuesto que existen muchos tipos de Hypervisor en el mercado
+
+Hypervisor:
+° Virtualbox
+° VMWare
+° Parallels -> Exclusivo MacOS
+° Hyper-V -> Exclusivo Windows
+
+Problemas:
+° Una copia completa del S.O. -> 5GB min
+° Lentas de iniciar
+° Muchos recursos:
+    -CPU
+    -RAM
+
+Contenedores:
+° Aplicaciones aisladas
+° Menos espacio en el disco
+° Usan el mismo S.O.
+° Inician más rápido
+° Menos recursos
+
+Componentes:
+|-------------------------------|                     |-------------------------------|
+|           Cliente             | ---> API REST --->  |           Servidor            | ---> Conocido como Docker Engine ---> pronunciación correcta Enyin
+|-------------------------------|                     |-------------------------------|
+Docker se compone de un cliente y tambien de un servidor, donde el cliente se comunica con el servidor a través de una API REST y el servidor es llamado Docker Engine.
+Los contenedores que ejecutamos con Docker son procesos.
+
+                Proceso
+Aplicación -->
+                Procesos
+
+Cuando ejecutamos nuestra aplicacion y esta se encuentra corriendo, a esta le llamamos proceso y nosotros podriamos tener múltiples instancias de una aplicacion
+corriendo, por ende nosotros tenemos solamente una aplicación, pero podemos tener múltiples procesos de esta.
+
+Contenedores:
+    Contenedores
+|------------------|
+|  °     °     °   |  ---> Procesos Sistema de archivos
+|------------------|
+
+|------------------|
+|      Ubuntu      |  ---> Ubuntu cuenta con 3 partes
+|------------------|
+
+Sistema Operativo:
+
+|------------------|
+|   Aplicaciones   |
+|------------------|
+|------------------|
+|      Kernel      | ---> El Kernel es el encargado de comunicar el hardware físico con las aplicacion, se va a encargar de asignarle los recursos necesarios a las aplicaciones.
+|------------------|
+|------------------|
+|     Hardware     | ---> La primera capa es la inferior que viene siendo hardware físico de nuestro computador.
+|------------------|
+En el apartdao de Aplicaciones se instala la maquina virtual que tiene su aplicacion, propio kernel y hardware, Si la aplicacion necesita hardware se lo pide a su kernel y el
+kernel al hardware y este al kernel del equipo fisico que asigna recursos del equipo fisico, en cambio un contenedor que tambien esta en la capa de aplicaciones, se comunica
+directamente con el kernel del equipo fisico, por eso es mas rapido la ejecucion.
+
+Pero tienen limitantes:
+|--------------------------------------------------------------------------|
+|     Si nuestro servidor es:    |   Solo puede ejecutar contenedores:     |
+|--------------------------------------------------------------------------|
+|- Linux                         |- Linux                                  |
+|--------------------------------|-----------------------------------------|
+|- Windows                       |- Windows                                |
+|                                |- Linux                                  |
+|--------------------------------|-----------------------------------------|
+|- MacOS                         |- Maquina Virtual Linux                  |
+|--------------------------------------------------------------------------|
+
+Instalacion:
+1.- Entrar a https://docs.docker.com/get-docker/
+2.- Elegir tu sistema operativo y darle en descargar
+3.- Ejecutar el instalador
+4.- Aceptar y empezara a instalar archivos, despues de eso se reiniciara el equipo
+5.- Al prender te pedira aceptar politicas e iniciar sesion, puedes iniciar con git o correo
+6.- Abrir una terminal, puede ser
+    °PowerShell
+    °CMD
+    °VSCode
+
+Con el comando:
+*   docker version   *
+Muestra la version de docker, en caso de no mostrarse, docker engine todavia no se encuentra corriendo o tuviste error en la instalacion.
+
+Flujo de desarrollo con Docker
+1.- Tomar una aplicacion
+2.- Agregar en raiz un archivo llamado Dockerfile
+    Contiene:
+        °Una version pequeña del sistema operativo
+        °Ambiente de ejecucion como NodeJS o Python
+        °Archivos de nuestra aplicacion
+        °Dependencias de terceros
+        °Variables de entorno
+
+Contenedores        ==       Procesos        --->        Sistema de archivos
+Imagen              ==       Aplicación
+
+Al subir una imagen en DockerHub un desarrollador puede tener acceso a la imagen mismo que podemos tener en produccion o pruebas
+DockerHub   ==  Github
+Docker      ==  Git
+
+Con el comando:
+*   docker build -t hola-mundo .   *
+Construimos una imagen
+
+Con el comando:
+*   docker image ls   *
+Listar todas las imágenes que se encuentran dentro de la maquina
+
+Con el comando:
+*   docker run hola-mundo   *
+Ejecutar imagen, transformar en un contenedor para poder ejecutarla
+
+Con el comando:
+*   docker run nschurmann/hola-mundo   *
+Ejecutar imagen, transformar en un contenedor para poder ejecutarla desde DockerHub, descargar el contenedor
+
+Linux es Open Source lo cual significa que cualquiera puede acceder al codigo fuente de Linux.
+
+Distribuciones / Distros:
+° Ubuntu
+° Debian
+° Alpine
+° Fedora
+° Slackware
+° Redhat
+
+Para descargar Ubuntu:
+1.- Ir a esta URL: https://hub.docker.com/search?q=ubuntu
+2.- Darle click en la primera que salga y copiar el comando que aparece
+3.- En la terminal vamos a correr el comando docker run ubuntu, ya sabemos que run es para ejecutar
+    Lo que hace es:
+        ° Buscar imagen en local
+        ° Descargar
+        ° Ejecutar
+
+Con el comando:
+*   docker ps   *
+Para ver los procesos que se encuentran corriendo actualmente
+
+Con el comando:
+*   docker ps -a   *
+
+Con el comando:
+*   docker run -it ubuntu   *
+Para ingresar de manera interactiva(-it) a ubuntu
+
+Va a iniciar el shell el cual recibe las instrucciones y esta la manda al Kernel
+
+root@c07dcd27d41f:/#
+root            ==  Superadmin
+@               ==  Separador
+c07dcd27d41f    ==  Nombre de la maquina
+/               ==  Ruta
+#               ==  Lo que ingresemos se ejecutara como administrador
+
+Con el comando LINUX:
+*   ls   *
+Enlista todos los directorios que se encuentran en la ruta actual
+
+Con el comando LINUX:
+*   pwd   *
+Indica la ruta actual que estamos
+
+Linux respeta mayusculas y minusculas el cual es necesario ingresar de manera correcta el comando
+
+Con el comando LINUX:
+*   whoami   *
+Indica el usuario actual
+
+Con el comando LINUX:
+*   echo   *
+Muestra el mensaje en terminal
+
+Con el comando LINUX:
+*   echo $0   *
+Muestra con que shell se esta ejecutando los comandos
+
+bash == bourne again shell
+
+Con la flecha hacia arriba y abajo podemos navegar por el historial de la terminal
+
+Para cancelar el comando ejecutado es ctrl + c
+
+Si quieres biscar un comando es ctrl + r y entras en modo busqueda que buscara el comando en tu historial en la terminal
+
+Si el comando que encuentra no es el que quieres, con ctrl * r de cambias de registro
+
+Con el comando LINUX:
+*   clear   *
+Limpia la terminal
+
+Con el comando LINUX:
+*   history   *
+Muestra el historial de la terminal
+
+Con el comando LINUX:
+*   !<num>   *
+Despues del comando historial y veas la lista de comandos enumerados, puedes elegir un comando agregando el numero al lado del <!>
+
+Para instalar y desinstalar paquetes se usa el apt
+
+Con el comando LINUX:
+*   apt install nano   *
+Instala un editor de texto
+
+Si no instala el nano es por que debemos actualizar el apt
+
+Con el comando LINUX:
+*   apt list   *
+Vemos el listado de paquetes que se encuentran disponibles
+
+Con el comando LINUX:
+*   apt update   *
+Descarga la base de datos y la sincroniza con nuestra base de datos local
+
+Con el comando LINUX:
+*   nano   *
+Verificas que si se instalo
+
+Con el comando LINUX:
+*   apt remove nano   *
+Elimina el paquete
+
+Con el comando LINUX:
+*   ls -1   *
+Enlista los directorios de forma vertical
+
+Con el comando LINUX:
+*   ls -l   *
+Enlista los directorios de forma vertical con su informacion
+
+Con el comando LINUX:
+*   ls var   *
+Enlista los directorios sin tener que acceder a la carpeta
+
+Con el comando LINUX:
+*   cd var   *
+Para entrar al directorio
+
+Con el comando LINUX:
+*   cd ..   *
+Para regresar en el directorio
+
+Con el comando LINUX:
+*   mkdir chanchitofeliz   *
+Para crear un directorio
+
+Con el comando LINUX:
+*   mv chanchitofeliz/ holamundo   *
+Para renombrar la carpeta
+
+Con el comando LINUX:
+*   touch holamundo.txt a1.txt a2.txt a3.txt   *
+Crea multiples archivos
+
+Con el comando LINUX:
+*   touch holamundo.txt   *
+Una vez creado al hacer lo mismo con el archivo actualiza la hora que se edito
+
+Con el comando LINUX:
+*   rm holamundo.txt   *
+Elimina un o varios archivos archivo
+
+Con el comando LINUX:
+*   rm a*.txt   *
+Elimina los archivos en frecuencia
+
+Con el comando LINUX:
+*   rm -r holamundo/   *
+Elimina el directorio o la carpeta
+
+Con el comando LINUX:
+*   nano archivo.txt   *
+Crea un archivo en nano
+
+Con el comando LINUX:
+*   cat archivo.txt   *
+Viene de concatenar sirve para juntar dos archivos pero en este caso para ver el contenido del archivo
+
+Con el comando LINUX:
+*   more archivo.txt   *
+Parte el contenido del archivo en paginas para que no te muetsre todo el doc completo
+
+Con el comando LINUX:
+*   less archivo.txt   *
+Es lo mismo que more pero para otra version, en caso de no tenerlo se tiene que instalar
+
+Con el comando LINUX:
+*   apt install less   *
+Instala el paquete less
+
+Con el comando LINUX:
+*   head archivo.txt   *
+Muestra las primeras 15 lineas del archivo
+
+Con el comando LINUX:
+*   head -n 5 archivo.txt   *
+Indica cuantas lineas queremos ver del archivo comenzando del inicio
+
+Con el comando LINUX:
+*   tail archivo.txt   *
+Muestra las ultimas 15 lineas del archivo
+
+Con el comando LINUX:
+*   tail -n 2 archivo.txt   *
+Indica cuantas lineas queremos ver del archivo de la parte final
+
+Con el comando LINUX:
+*   tail -f archivo.txt   *
+Muestra el contenido del archivo aun que se este editando, sirve mucho en logs
+
+Con el comando LINUX:
+*   cat archivo.txt > /dev/stdout   *
+Definimos a que salida queremos mostrar el archivo.
+
+Con el comando LINUX:
+*   ls -al noexiste.txt 2> listado.txt   *
+Como aqui saldria un error ya que no esiste es un archivo que no existe, el error lo escribe en listado.txt, es decir el error se manda al archivo
+
+El operador >> indica que tiene que concatenar o Agregar
+El operador 2>> indica que va a concatenar los errores
+
+Con el comando LINUX:
+*   ls -al noexiste.txt > listado.txt 2>&1   *
+Esta sintaxis puede ser exitosa o fracasada, es por eso que dependiendo el resultado manda el contenido o el mensaje de error
+
+Con el comando LINUX:
+*   grep Hola archivo.txt   *
+Con el grep indicamos que queremos buscar algo en un archivo, es sensible a mayusculas y minusculas
+
+Con el comando LINUX:
+*   grep -i hola archivo.txt   *
+Al agregarle el -i indica que no importa las mayusculas y minusculas, con que coincidan
+
+Con el comando LINUX:
+*   grep -i hola *.txt   *
+Indica que busque en todos los archivos
+
+Con el comando LINUX:
+*   grep -ir hola .   *
+Busca en todos los archivos de un directorio
+
+Con el comando LINUX:
+*   find   *
+Busca todos los archivos y carpetas donde nos encontramos actualmente
+
+Con el comando LINUX:
+*   find /etc/   *
+Busca los archivos y directorios de esa ruta
+
+Con el comando LINUX:
+*   find /etc -type d   *
+Busca los directorios
+
+Con el comando LINUX:
+*   find /etc -type f   *
+Busca los archivos
+
+Con el comando LINUX:
+*   find /etc -type f -name "a*"   *
+Busca los archivos que comiencen con la letra a, es sencible a mayusculas y minusculas
+
+Con el comando LINUX:
+*   find /etc -type f -iname "A*"   *
+Busca los archivos que comiencen con la letra a, da igual si es mayusculas o minusculas
+
+Con el comando LINUX:
+*   mkdir holamundo ; cd holamundo ; echo "listo!"   *
+Al agregarle ; permite ingresar otra instruccion, por ende lo que se hacia en 3 lineas ahora se hace en 1
+
+Con el comando LINUX:
+*   mkdir holamundo && cd holamundo && echo "listo!"   *
+Al agregarle el && indica que las demas instrucciones se haran solo si la primer instruccion tuvo exito
+
+Con el comando LINUX:
+*   mkdir holamundo || cd holamundo || echo "listo!"   *
+Al agregarle el || indica que las demas instrucciones se haran solo si la instruccion anterior fallo
+
+Con el comando LINUX:
+*   mkdir holamundo ;\   *
+Al agregarle el \ podemos pasar a la siguente linea sin mandar la instruccion, es como presionar enter sin que se mande el comando
+
+Con el comando LINUX:
+*   env   *
+Con este comando podemos ver todas las variables del entorno
+
+Con el comando LINUX:
+*   echo $PATH   *
+Con este comando podemos ver la ruta de la variable, es sencible a mayusculas y minusculas
+
+Con el comando LINUX:
+*   printenv PATH   *
+Es lo mismo, imprime el valor de la variable PATH
+
+Con el comando LINUX:
+*   echo "echo hola mundo!" > /bin/holamundo   *
+En la ruta bin creara un comando llamado holamundo que al ingresarlo imprimira hola mundo
+
+Con el comando LINUX:
+*   chmod +x /bin/holamundo   *
+Le da permisos de ejecutar el comando
+
+Con el comando LINUX:
+*   export HOLAMUNDO="Soy una variable de entorno"   *
+Agrega una variable de entorno
+
+Con el comando LINUX:
+*   exit   *
+Salimos del docker
+
+Con el comando:
+*   docker start -i 46d   *
+Ingresamos de nuevo al contenedor docker
+
+Con el comando LINUX:
+*   echo HOLAMUNDO="La variable de entorno" >> .bashrc   *
+De esta forma estamos agregando la variable al archivo con el fin de que no se borre cada que salimos del contenedor.
+
+Con el comando LINUX:
+*   source .bashrc   *
+Agrega las variables de entorno, si no se puede edita el archivo con nano y guarda, escribe de nuevo el comando y con printenv veras ahora si el contenido de la variable
+
+Con el comando LINUX:
+*   ps   *
+Ver y gestionar los procesos
+
+Con el comando LINUX:
+*   sleep 10   *
+Manda a dormir la terminal durante 10 segundos
+
+Con el comando LINUX:
+*   sleep 500 &   *
+Manda a dormir la terminal durante 500 segundos en segundo plano pero podemos seguir utilizando la terminal
+
+Con el comando LINUX:
+*   jobs &   *
+Podemos ver que se esta ejecutando en segundo plano
+
+Con el comando LINUX:
+*   fg %1   *
+Regresamos al comando que se ejecutaba en segundo plano
+
+Con el comando LINUX:
+*   kill 37   *
+Mata el proceso con ese identificador
+
+Con el comando LINUX:
+*   kill -9 37   *
+Forza a terminar el proceso
+
+Con el comando LINUX:
+*   useradd -m felipe   *
+Crea el usuario felipe con un directorio
+
+Con el comando LINUX:
+*   usermod -s /bin/bash felipe   *
+Asigna una terminal bash al usuario creado
+
+Con el comando LINUX:
+*   cat /etc/shadow   *
+Vemos las contraseñas almacenadas encriptadas
+
+Con el comando LINUX:
+*   su felipe   *
+Cambiamos de usuario
+
+Con el comando LINUX:
+*   userdel felipe   *
+Elimina el usuario
+
+Con el comando LINUX:
+*   docker exec -it -u felipe 46d bash   *
+Inicia sesion en la terminal linux con el usuario felipe en una terminal bash
+
+Con el comando LINUX:
+*   group   *
+Nos permite ver las opciones de grupos
+
+Con el comando LINUX:
+*   groupadd devs   *
+Nos permite crear un grupo llamado devs
+
+Con el comando LINUX:
+*   id   *
+Podemos ver los id del usuario
+
+Con el comando LINUX:
+*   usermod -G devs felipe   *
+Agregamos a felipe al grupo devs
+
+Con el comando LINUX:
+*   groups felipe   *
+Nos permite ver todos los grupos relacionados a felipe
+
+Con el comando LINUX:
+*   id felipe   *
+Nos permite ver los ids de felipe
+
+Con el comando LINUX:
+*   usermod -a -G devs felipe   *
+Agregamos a felipe al grupo devs, se usa la -a por la version si no funciona el comando sin la -a
+
+- rw- r-- r--
+
+- = archivo
+d = directorio
+
+r = leer/read
+w = escribir/write
+x = ejecutar/execute
+
+Con el comando LINUX:
+*   chmod u+x archivo.sh   *
+Con este comando le damos permisos al usuario de ejecutar el archivo.sh
+
+Con el comando LINUX:
+*   chmod o-rwx archivo.sh   *
+Con este comando le quitamos permisos al grupo o
+
+Con el comando LINUX:
+*   chmod u-w,g-wr,o+x archivo.sh   *
+Con este comando podemos realizar varias acciones sobre los usuarios/grupos u otros
+
+Con el comando LINUX:
+*   chmod u=rxw archivo.sh   *
+Con este comando podemos asignar los permisos de manera rapida, es decir, en ver de agregar o quitar (+,-) que se igual a (=) rxw
+
+Dockerfile:
+FROM: Indica la imagen base
+WORKDIR: Cambiar el directorio de trabajo
+COPY: Copia archivos
+ADD: Agrega archivos
+RUN: Ejecutar comandos
+ENV: Variables de entorno
+EXPOSE: Exponer los puertos
+USER
+CMD
+ENTRYPOINT
+
+Al elegir la version que pondremos en FROM es necesario ser lo mas especifico posible con la version.
+
+Con el comando:
+*   docker build -t app-react .   *
+Con este comando construimos la imagen
+
+Con el comando:
+*   docker run -it app-react   *
+Este comando sirve para ejecutar nuestro contenedor de forma interactiva
+
+Con el comando:
+*   docker run -it app-react sh   *
+Este comando sirve para ejecutar nuestro contenedor de forma interactiva entrando en la shell o consola
+
+El archivo .dockerignore sirve para ignorar archivos y no se suba al contenedor
+
+Con el comando:
+*   docker history app-react   *
+Con este comando podemos ver el historial del contenedor
+
+Con el comando:
+*   npm run dev   *
+Con este comando ejecutamos la aplicacion en modo desarrollo
+
+Con el comando:
+*   docker run app-react npm run dev   *
+Con este comando corremos la app dentro del contenedor de docker
+
+Con el comando:
+*   docker stop 238   *
+Con este comando detenemos el contenedor
+
+RUN es un comando que se ejecuta cuando se esta creando las imagenes
+CMD es un comando que se ejecuta cuando se inician los contenedores
+
+EXPOSE permite definir el puerto que queremos tener expuesto eventualmente
+
+Con el comando LINUX:
+*   addgroup react   *
+Con este comando agregamos el grupo react
+
+Con el comando LINUX:
+*   adduser -S -G react react   *
+Con este comando creamos un usuario de sistema llamado react y lo metemos al grupo react
+
+COPY --chown=react package*.json .: Agregando --chown= react le damos los permisos a ese usuario
+
+Con el comando:
+*   docker image prune   *
+Con este comando eliminamos las imagenes que no estan relacionadas a un contenedor
+
+Con el comando:
+*   docker container prune   *
+Con este comando eliminamos los contenedores inactivos
+
+Con el comando:
+*   docker image rm e0b a6a   *
+Con este comando eliminamos los contenedores activos
+
+Con el comando:
+*   docker build -t app-react:1 .   *
+Con este comando creamos una imagen pero le asignamos la etiqueta "1"
+
+Con el comando:
+*   docker image remove app-react:1   *
+Con este comando eliminamos la imagen con etiqueta 1
+
+Con el comando:
+*   docker image tag app-react:1 app-react:2   *
+Con este comando le podemos cambiar el nombre a la etiqueta
+
+Con el comando:
+*   docker login   *
+Con este comando iniciamos sesion en dockerhub desde consola
+
+Con el comando:
+*   docker push aldarocha/app-react:2   *
+Con este comando sirve para subir la imagen a dockerhub
+
+Con el comando:
+*   docker image save -o app-react.tar aldarocha/app-react:3   *
+Con este comando crea un archivo tar tipo zip, comprimido que nos permite obtener la imagen
+
+Con el comando:
+*   docker image load -i app-react.tar   *
+Con este comando podemos cargar una imagen desde el archivo tar
+
+Con el comando:
+*   docker create app-react:2   *
+Con este comando solo creamos el contenedor pero no lo inicia
+
+Con el comando:
+*   docker create --name holamundo app-react:2   *
+Con este comando le asignamos el nombre al contenedor
+
+Con el comando:
+*   docker start holamundo   *
+Con este comando inicia el contenedor
+
+Con el comando:
+*   docker stop holamundo   *
+Con este comando detenemos el contenedor
+
+Con el comando:
+*   docker run -d --name holarun app-react:2   *
+Con este comando inciamos un contenedor con el nombre holarun y con la -d podemos seguir usando la terminal aun que este corriendo el contenedor
+
+Con el comando:
+*   docker logs holamundo   *
+Con este comando podemos ver todos los logs que genera el contenedor
+
+Con el comando:
+*   docker logs -f holamundo   *
+Con este comando seguir los logs que genera el contenedor
+
+Con el comando:
+*   docker logs -n 5 holamundo   *
+Con este comando imprime solo las ultimas 5 lineas
+
+Con el comando:
+*   docker logs -t -n 10 holamundo   *
+Con este comando imprime solo las ultimas 10 lineas con los tiempos
+
+En el package.json:
+"scripts": {
+    "dev": "vite --host",
+    "build": "vite build",
+    "lint": "eslint . --ext js,jsx --report-unused-disable-directives --max-warnings 0",
+    "preview": "vite preview"
+}
+Es necesario establecer --host para que asi podamos usar la app en la red local (LAN)
+
+Con el comando:
+*   docker run -d -p 80:5173 --name holarun e93   *
+Con este comando establecemos conexion de puerto entre nuestra maquina host y el contenedor
+
+Al meter localhost en la url con el puerto ya podremos ver la pagina del contenedor
+
+Con el comando:
+*   docker stop bd7   *
+Con este comando detenemos el contenedor
+
+Al hacer esto incluso en el navegador ya no se estara ejecutando la pagina
+
+Con el comando:
+*   docker container rm 255   *
+Con este comando eliminamos el contenedor cuando este detenido
+
+Con el comando:
+*   docker container rm -f bd7   *
+Con este comando eliminamos el contenedor aun corriendo, forza la eliminacion
+
+Con el comando:
+*   docker run -d -p 80:5173 --name holamundo app-react:3   *
+Con este comando iniciamos un contenedor con una imagen y se le asigna el puerto y nombre
+
+Con el comando:
+*   docker exec -it holamundo sh   *
+Con este comando entramos a interactuar el contenedor en una shell
+
+Con el comando:
+*   docker exec holamundo ls   *
+Con este comando ejecutamos un comando dentro del contenedor sin tener que entrar a el primero, y el resultado lo devuelve a la terminal host fuera del contenedor
+
+Con el comando:
+*   docker volume create datos   *
+Con este comando creamos un volumen, el cual sirve como link entre contenedores/host-contenedor etc
+
+Con el comando:
+*   docker volume inspect datos   *
+Con este comando podemos inspeccionar un volumen
+
+Con el comando:
+*   docker run -d -p 3000:3000 -v datos:/app/datos app-react:3   *
+Con este comando podemos crear el contenedor con la imagen app-react3 con el puerto 3000 y con su volumen creado
+
+Con el comando:
+*   docker run -d -p 80:5173 --name holamundo -v C:\Users\ALM-Francisco\Desktop\UTL\Cursos\Docker\AppDeEjemplo\src:/app/src react    *
+Con este comando podemos crear el contenedor de nombre holamundo con la imagen react con el puerto 80 en nuetsra maquina dirigido al 5173 del docker y con su volumen creando
+y ligado al directorio del contenedor es decir que lo que hagamos en la carpeta fuera del docker se vera reflejado
+
+Con el comando:
+*   docker cp f1134add419d:/app/contenedor.txt .    *
+Con este comando traemos un archivo creado en el contenedor a la maquina local
+
+Con el comando:
+*   docker cp anfitrion.txt f1134add419d:/app/    *
+Con este comando copiamos un archivo de la maquina local al contenedor
