@@ -764,7 +764,7 @@ Con el comando:
 Con este comando podemos crear el contenedor con la imagen app-react3 con el puerto 3000 y con su volumen creado
 
 Con el comando:
-*   docker run -d -p 80:5173 --name holamundo -v C:\Users\ALM-Francisco\Desktop\UTL\Cursos\Docker\AppDeEjemplo\src:/app/src react    *
+*   docker run -d -e CHOKIDAR_USEPOLLING=true -p 80:5173 --name holamundo -v C:\Users\ALM-Francisco\Desktop\UTL\Cursos\Docker\AppDeEjemplo\src:/app/src react    *
 Con este comando podemos crear el contenedor de nombre holamundo con la imagen react con el puerto 80 en nuetsra maquina dirigido al 5173 del docker y con su volumen creando
 y ligado al directorio del contenedor es decir que lo que hagamos en la carpeta fuera del docker se vera reflejado
 
@@ -774,4 +774,27 @@ Con este comando traemos un archivo creado en el contenedor a la maquina local
 
 Con el comando:
 *   docker cp anfitrion.txt f1134add419d:/app/    *
-Con este comando copiamos un archivo de la maquina local al contenedor
+
+Con el comando:
+*   docker compose up    *
+Con este comando ejecutamos un archivo docker compose el cual tiene las dependencias necesarias para el correcto funcionamiento del backend y el frontend
+
+Con el comando:
+*   docker container ls -aq    *
+Con este comando enlista todos los contenedores solo por id
+
+Con el comando:
+*   docker container rm -f $(docker container ls -aq)    *
+Con este comando enlista todos los contenedores solo por id y los elimina aun que esten corriendo debido al force(-f)
+
+Con el comando:
+*   docker image rm $(docker image ls -q)    *
+Con este comando enlista todos las imagenes solo por id y los elimina
+
+Con el comando:
+*   docker network ls    *
+Con este comando enlista todos las redes
+
+Con el comando CMD:
+*   ssh-keygen -t ed25519 -C "<<correoelectronico>>"   *
+Con este comando generas llaves ssh
